@@ -1,0 +1,53 @@
+-- g3st0ck360.transacciones_fe_view source
+
+create or replace
+algorithm = UNDEFINED view `g3st0ck360`.`transacciones_fe_view` as
+select
+    `v`.`id` as `transaccion_id`,
+    1 as `clasific`,
+    1 as `tipo_documento`,
+    `v`.`establecimiento` as `establecimiento`,
+    `v`.`punto` as `punto`,
+    `v`.`nrocomprobante` as `numero`,
+    null as `serie`,
+    null as `descripcion`,
+    null as `observacion`,
+    `v`.`fecha` as `fecha`,
+    1 as `tipo_impuesto`,
+    'PYG' as `moneda`,
+    `v`.`condicion` as `condicion`,
+    `c`.`escontribuyente` as `cliente_contribuyente`,
+    `c`.`razonsocial` as `cliente_razon_social`,
+    `c`.`nombrefantasia` as `cliente_nombre_fantasia`,
+    `c`.`tipooperacion` as `cliente_tipo_operacion`,
+    `c`.`idpais` as `cliente_pais`,
+    `c`.`email` as `cliente_email`,
+    `c`.`id` as `cliente_codigo`,
+    `c`.`idtipodocumento` as `cliente_documento_tipo`,
+    `c`.`nrodocumento` as `cliente_documento_numero`,
+    `e`.`idtipodocumento` as `usuario_documento_tipo`,
+    `e`.`nrodocumento` as `usuario_documento_numero`,
+    concat(`e`.`nombres`, ' ', `e`.`apellidos`) as `usuario_nombre`,
+    `e`.`cargo` as `usuario_cargo`,
+    1 as `factura_presencia`,
+    `vd`.`idproducto` as `item_codigo`,
+    `p`.`nombre` as `item_descripcion`,
+    `p`.`idunidadmedida` as `item_unidad_medida`,
+    `vd`.`cantidad` as `item_cantidad`,
+    `vd`.`precio` as `item_precio_unitario`,
+    `p`.`ivatipo` as `item_iva_tipo`,
+    `p`.`ivabase` as `item_iva_base`,
+    `p`.`impuesto` as `item_iva`,
+    1 as `do_integra`
+from
+    ((((`g3st0ck360`.`ventas` `v`
+left join `g3st0ck360`.`clientes` `c` on
+    (`c`.`id` = `v`.`idcliente`))
+left join `g3st0ck360`.`empleados` `e` on
+    (`e`.`id` = `v`.`idvendedor`))
+left join `g3st0ck360`.`ventasdetalles` `vd` on
+    (`vd`.`idventa` = `v`.`id`))
+left join `g3st0ck360`.`productos` `p` on
+    (`p`.`id` = `vd`.`idproducto`))
+order by
+    `v`.`id` desc;
