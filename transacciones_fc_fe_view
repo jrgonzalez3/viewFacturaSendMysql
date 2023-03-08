@@ -1,0 +1,32 @@
+-- g3st0ck360.transacciones_fc_fe_view source
+
+create or replace
+algorithm = UNDEFINED view `g3st0ck360`.`transacciones_fc_fe_view` as
+select
+    `pc`.`idoperacion` as `id`,
+    1 as `clasific`,
+    `v`.`condicion` as `tipo`,
+    `pc`.`idformapago` as `entregas_tipo`,
+    'PYG' as `entregas_moneda`,
+    `pc`.`idtipotarjeta` as `entregas_info_tarjeta_tipo`,
+    `pc`.`nrocomprobante` as `entregas_info_tarjeta_numero`,
+    1 as `entregas_info_tarjeta_medio_pago`,
+    `pc`.`nrocomprobante` as `entregas_info_cheque_numero_cheque`,
+    `ba`.`nombrebanco` as `entregas_info_cheque_banco`,
+    `ctocab`.`tipocredito` as `credito_tipo`,
+    `ctocab`.`plazo` as `credito_plazo`,
+    'PYG' as `credito_info_cuotas_moneda`,
+    `cd`.`montocuota` as `credito_info_cuotas_monto`,
+    `cd`.`vencimiento` as `credito_info_cuotas_vencimiento`
+from
+    (((((`g3st0ck360`.`ventas` `v`
+left join `g3st0ck360`.`pagosclientes` `pc` on
+    (`pc`.`idoperacion` = `v`.`id`))
+left join `g3st0ck360`.`ar_formasdepago` `fp` on
+    (`fp`.`id` = `pc`.`idformapago`))
+left join `g3st0ck360`.`ar_bancos` `ba` on
+    (`ba`.`id` = `pc`.`idbanco`))
+left join `g3st0ck360`.`creditocabeceraventa` `ctocab` on
+    (`ctocab`.`idoperacion` = `v`.`id`))
+left join `g3st0ck360`.`creditosdetalleventa` `cd` on
+    (`cd`.`idoperacion` = `v`.`id`));
